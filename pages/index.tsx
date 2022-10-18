@@ -33,39 +33,58 @@ export default function Home() {
         height: "100vh",
         width: "100vw",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        flexDirection: "column",
+        gridGap: 8,
+        background: "linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c)"
       }}
     >
-      <button
-        style={{ fontSize: 32, marginRight: 8 }}
-        onClick={() => addVoteDocument("cats")}
-      >
-        🐱
-      </button>
-      <h3>
-        Cat People:{" "}
-        {votes?.docs?.filter((doc) => doc.data().vote === "cats").length}
-      </h3>
-      <button
-        style={{ fontSize: 32, marginRight: 8 }}
-        onClick={() => addVoteDocument("dogs")}
-      >
-        🐶
-      </button>
-      <h3>
-        Dog People:{" "}
-        {votes?.docs?.filter((doc) => doc.data().vote === "dogs").length}
-      </h3>
-      <button
-        style={{ fontSize: 32, marginRight: 8 }}
-        onClick={() => addVoteDocument("cats and dogs")}
-      >
-        🐱🐶
-      </button>
-      <h3>
-        Love Both:{" "}
-        {votes?.docs?.filter((doc) => doc.data().vote === "cats and dogs").length}
-      </h3>
+      {loading && <h4>Loading...</h4>}
+      {user && (
+        <>
+          <h1>Cats or Dogs?</h1>
+
+          <div style={{ flexDirection: "row", display: "flex" }}>
+            <button
+              style={{ fontSize: 32, marginRight: 8 }}
+              onClick={() => addVoteDocument("cats")}
+            >
+              🐱
+            </button>
+            <h3>
+              Cat People:{" "}
+              {votes?.docs?.filter((doc) => doc.data().vote === "cats").length}
+            </h3>
+          </div>
+
+          <div style={{ flexDirection: "row", display: "flex" }}>
+            <button
+              style={{ fontSize: 32, marginRight: 8 }}
+              onClick={() => addVoteDocument("dogs")}
+            >
+              🐶
+            </button>
+            <h3>
+              Dog People:{" "}
+              {votes?.docs?.filter((doc) => doc.data().vote === "dogs").length}
+            </h3>
+          </div>
+
+          <div style={{ flexDirection: "row", display: "flex" }}>
+            <button
+              style={{ fontSize: 32, marginRight: 8 }}
+              onClick={() => addVoteDocument("cats and dogs")}
+            >
+              🐱🐶
+            </button>
+            <h3>
+              Love Both:{" "}
+              {votes?.docs?.filter((doc) => doc.data().vote === "cats and dogs").length}
+            </h3>
+          </div>
+
+        </>
+      )}
     </div>
   )
 }
