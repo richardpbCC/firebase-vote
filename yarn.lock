@@ -1106,7 +1106,7 @@
     "locate-path" "^6.0.0"
     "path-exists" "^4.0.0"
 
-"firebase@^8.10.1", "firebase@^8.2.4", "firebase@>= 9.0.0", "firebase@>=8.2.4":
+"firebase@^8.10.1", "firebase@^8.2.4", "firebase@>= 8.0.0", "firebase@>=8.2.4":
   "integrity" "sha512-84z/zqF8Y5IpUYN8nREZ/bxbGtF5WJDOBy4y0hAxRzGpB5+2tw9PQgtTnUzk6MQiVEf/WOniMUL3pCVXKsxALw=="
   "resolved" "https://registry.npmjs.org/firebase/-/firebase-8.10.1.tgz"
   "version" "8.10.1"
@@ -1862,10 +1862,10 @@
     "object-assign" "^4.1.1"
     "scheduler" "^0.20.2"
 
-"react-firebase-hooks@^5.0.3":
-  "integrity" "sha512-0+V2XwInZJNjW8B2cm+U21Hlv4xnp/1tJqIoDg2rjyWzKTQ9VoLPQ9PAt+fMqPumjLz5uCIREY7YqGSSjc439Q=="
-  "resolved" "https://registry.npmjs.org/react-firebase-hooks/-/react-firebase-hooks-5.0.3.tgz"
-  "version" "5.0.3"
+"react-firebase-hooks@^3.0.4":
+  "integrity" "sha512-9LztZGaZU0qJY/TQWzkBlfVrFmu0Ui6HE8CUjU7tNz9oGKGx5tUQG/xQbfyMIGClErgnnQsm8sC+oU9pg8Ri5Q=="
+  "resolved" "https://registry.npmjs.org/react-firebase-hooks/-/react-firebase-hooks-3.0.5.tgz"
+  "version" "3.0.5"
 
 "react-firebaseui@^5.0.2":
   "integrity" "sha512-ZfIWfRKlKAkMwEI+41rMPkwdNEQEfBLXV6TVaN5er3cdwMD0vQecWt6YOE4/v1ELziaj10NNRB8yB42V56QBMQ=="
