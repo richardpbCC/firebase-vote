@@ -1,30 +1,23 @@
 import firebase from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollection } from "react-firebase-hooks/firestore";
 
-
-export default function Results() {
+export default function Results({ db, votes, setHasVoted }) {
     /* Firebase auth */
-    const [user, loading, error] = useAuthState(firebase.auth());
-    console.log("Loading:", loading, "|", "Current user:", user);
+    const [user, loading, error] = useAuthState(firebase.auth());    
 
-    /* Get votes collection from firestore*/    
-    const [votes, votesLoading, votesError] = useCollection(
-        firebase.firestore().collection("votes"),
-        {},
-    );
-
-    if (!votesLoading && votes) {
-        votes.docs.map((doc) => console.log(doc.data()));
-    }    
+    /* Function deletes vote document */
+    const deleteVoteDocument = async () => {
+        await db.collection("votes").doc(user.uid).delete(); 
+        setHasVoted(false);       
+    }
 
     return (
         <>
-            <h1>Here are the results:</h1>
+            <h1>Results:</h1>
 
             <div style={{ flexDirection: "row", display: "flex" }}>
                 <div
-                    style={{ fontSize: 32, marginRight: 8 }}                    
+                    style={{ fontSize: 32, marginRight: 8 }}
                 >
                     🐱
                 </div>
@@ -36,7 +29,7 @@ export default function Results() {
 
             <div style={{ flexDirection: "row", display: "flex" }}>
                 <div
-                    style={{ fontSize: 32, marginRight: 8 }}                    
+                    style={{ fontSize: 32, marginRight: 8 }}
                 >
                     🐶
                 </div>
@@ -48,7 +41,7 @@ export default function Results() {
 
             <div style={{ flexDirection: "row", display: "flex" }}>
                 <div
-                    style={{ fontSize: 32, marginRight: 8 }}                    
+                    style={{ fontSize: 32, marginRight: 8 }}
                 >
                     🐱🐶
                 </div>
@@ -56,6 +49,15 @@ export default function Results() {
                     Love Both:{" "}
                     {votes?.docs?.filter((doc) => doc.data().vote === "cats and dogs").length}
                 </h3>
+            </div>
+
+            <div style={{ flexDirection: "row", display: "flex" }}>
+                <button
+                    style={{ fontSize: 28, marginRight: 8 }}
+                    onClick={() => deleteVoteDocument()}
+                >
+                    Change my vote
+                </button>
             </div>
 
         </>

@@ -19,7 +19,7 @@ const SignInScreen = () => {
                 justifyContent: "center"
             }}
         >
-            <h1>Vote Login</h1>
+            <h1>Login Screen</h1>
             <p>Please Sign In</p>
             <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
         </div>
