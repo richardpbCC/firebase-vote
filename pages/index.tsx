@@ -1,29 +1,36 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.css';
+import React, { useState, useEffect } from "react";
 import firebase from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
+import SignIn from "../components/SignIn";
+import Vote from "../components/Vote";
+import Results from "../components/Results";
 
 export default function Home() {
-  const db = firebase.firestore();
+  /* Firebase auth */
   const [user, loading, error] = useAuthState(firebase.auth());
-  console.log("Loading:", loading, "|", "Current user:", user);
 
+  const [userVote, setUserVote] = useState<string>();
+
+  /* Function updates the user's vote displayed on the results component */
+  const updateUserVote = async () => {
+    const userData = db.collection("votes").doc(user.uid);
+    const userVote = await userData.get();
+    setUserVote(userVote?.data()?.vote);
+  }
+
+  /* Get votes collection from firestore*/
+  const db = firebase.firestore();
+
+  /* Get votes collection from firestore*/
   const [votes, votesLoading, votesError] = useCollection(
     firebase.firestore().collection("votes"),
     {},
   );
 
-  if (!votesLoading && votes) {
-    votes.docs.map((doc) => console.log(doc.data()));
-  }
-
-  /* Create new vote document */
-  const addVoteDocument = async (vote: string) => {
-    await db.collection("votes").doc(user.uid).set({
-      vote,
-    });
+  const checkVoteStatus = () => {
+    return votes?.docs?.find((doc) => doc.id === user.uid);
   }
 
   return (
@@ -40,51 +47,9 @@ export default function Home() {
       }}
     >
       {loading && <h4>Loading...</h4>}
-      {user && (
-        <>
-          <h1>Cats or Dogs?</h1>
-
-          <div style={{ flexDirection: "row", display: "flex" }}>
-            <button
-              style={{ fontSize: 32, marginRight: 8 }}
-              onClick={() => addVoteDocument("cats")}
-            >
-              🐱
-            </button>
-            <h3>
-              Cat People:{" "}
-              {votes?.docs?.filter((doc) => doc.data().vote === "cats").length}
-            </h3>
-          </div>
-
-          <div style={{ flexDirection: "row", display: "flex" }}>
-            <button
-              style={{ fontSize: 32, marginRight: 8 }}
-              onClick={() => addVoteDocument("dogs")}
-            >
-              🐶
-            </button>
-            <h3>
-              Dog People:{" "}
-              {votes?.docs?.filter((doc) => doc.data().vote === "dogs").length}
-            </h3>
-          </div>
-
-          <div style={{ flexDirection: "row", display: "flex" }}>
-            <button
-              style={{ fontSize: 32, marginRight: 8 }}
-              onClick={() => addVoteDocument("cats and dogs")}
-            >
-              🐱🐶
-            </button>
-            <h3>
-              Love Both:{" "}
-              {votes?.docs?.filter((doc) => doc.data().vote === "cats and dogs").length}
-            </h3>
-          </div>
-
-        </>
-      )}
+      {!user && !loading && <SignIn />}
+      {user && !loading && !checkVoteStatus() && <Vote db={db} updateUserVote={updateUserVote} />}
+      {user && !loading && checkVoteStatus() && <Results votes={votes} db={db} userVote={userVote} />}
     </div>
   )
 }
