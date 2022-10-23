@@ -1,15 +1,16 @@
 import firebase from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export default function Results({ db, votes, setHasVoted }) {
+export default function Results({ db, votes, userVote }) {
     /* Firebase auth */
-    const [user, loading, error] = useAuthState(firebase.auth());    
+    const [user, loading, error] = useAuthState(firebase.auth());
 
     /* Function deletes vote document */
     const deleteVoteDocument = async () => {
-        await db.collection("votes").doc(user.uid).delete(); 
-        setHasVoted(false);       
-    }
+        await db.collection("votes").doc(user.uid).delete();
+    }   
+    
+    
 
     return (
         <>
@@ -49,6 +50,15 @@ export default function Results({ db, votes, setHasVoted }) {
                     Love Both:{" "}
                     {votes?.docs?.filter((doc) => doc.data().vote === "cats and dogs").length}
                 </h3>
+            </div>
+
+            <div style={{ flexDirection: "row", display: "flex" }}>
+                <div
+                    style={{ fontSize: 32, marginRight: 8 }}
+                >
+                    You voted: {userVote}
+                </div>                     
+               
             </div>
 
             <div style={{ flexDirection: "row", display: "flex" }}>

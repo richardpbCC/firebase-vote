@@ -1,7 +1,8 @@
+import React, { useEffect } from "react";
 import firebase from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export default function Vote({ db, setHasVoted }) {
+export default function Vote({ db, updateUserVote }) {
     /* Firebase auth */
     const [user, loading, error] = useAuthState(firebase.auth());
 
@@ -12,8 +13,12 @@ export default function Vote({ db, setHasVoted }) {
             username,
             vote,
         });
-        setHasVoted(true);
+        updateUserVote();
     }
+
+    useEffect(() => {
+        updateUserVote();
+    });
 
     return (
         <>

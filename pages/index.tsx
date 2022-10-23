@@ -11,8 +11,14 @@ export default function Home() {
   /* Firebase auth */
   const [user, loading, error] = useAuthState(firebase.auth());
 
-  /* Saves whether user has voted */
-  const [hasVoted, setHasVoted] = useState<boolean>();
+  const [userVote, setUserVote] = useState<string>();
+
+  /* Function updates the user's vote displayed on the results component */
+  const updateUserVote = async () => {
+    const userData = db.collection("votes").doc(user.uid);
+    const userVote = await userData.get();
+    setUserVote(userVote?.data()?.vote);
+  }
 
   /* Get votes collection from firestore*/
   const db = firebase.firestore();
@@ -42,8 +48,8 @@ export default function Home() {
     >
       {loading && <h4>Loading...</h4>}
       {!user && !loading && <SignIn />}
-      {user && !loading && !checkVoteStatus() && <Vote setHasVoted={setHasVoted} db={db} />}
-      {user && !loading && checkVoteStatus() && <Results votes={votes} setHasVoted={setHasVoted} db={db}/>}
+      {user && !loading && !checkVoteStatus() && <Vote db={db} updateUserVote={updateUserVote} />}
+      {user && !loading && checkVoteStatus() && <Results votes={votes} db={db} userVote={userVote} />}
     </div>
   )
 }
