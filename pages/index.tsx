@@ -1,5 +1,5 @@
 import styles from '../styles/Home.module.css';
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import firebase from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -11,29 +11,44 @@ export default function Home() {
   /* Firebase auth */
   const [user, loading, error] = useAuthState(firebase.auth());
 
+  interface UserVote {
+    uid: String;
+    displayName: String;
+    photoURL: String;
+    vote: String;
+  } 
+
   const [userVote, setUserVote] = useState<string>();
+  const [allVotes, setAllVotes] = useState<UserVote[]>();
 
-  /* Get votes collection from firestore*/
-  const db = firebase.firestore();
-
-  /* Function updates the user's vote displayed on the results component */
-  const updateUserVote = async () => {
-    const userData = db?.collection("votes")?.doc(user?.uid);
-    const vote = await userData.get();
-    setUserVote(vote?.data()?.vote);
-  }
-
-  /* Get votes collection from firestore*/
+  /* Get votes collection from firestore */
   const [votes, votesLoading, votesError] = useCollection(
     firebase.firestore().collection("votes"),
     {},
   );
 
+  /* Get votes collection from firestore */
+  const db = firebase.firestore();
+
+  /* Function updates the user's vote displayed on the results component */
+  const updateVotes = async () => {
+    const userData = db?.collection("votes")?.doc(user?.uid);
+    const vote = await userData.get();
+    setUserVote(vote?.data()?.vote);
+
+    const voteData = await db?.collection("votes").get();
+    const formattedVotes = [];
+    voteData.forEach((doc) => formattedVotes.push(doc.data()));
+    setAllVotes(formattedVotes);
+  }
+
   useEffect(() => {
     if (user) {
-      updateUserVote();
+      console.log("useEffect")
+      updateVotes();
+      console.log("allVotes",allVotes)
     }
-  });
+  }, [votes]);
 
   return (
     <div
@@ -50,8 +65,8 @@ export default function Home() {
     >
       {loading && <h4>Loading...</h4>}
       {!user && !loading && <SignIn />}
-      {user && !loading && !userVote && <Vote db={db} setUserVote={setUserVote} />}
-      {user && !loading && userVote && <Results votes={votes} db={db} userVote={userVote} />}
+      {user && !loading && !userVote && <Vote db={db} setUserVote={setUserVote} allVotes={allVotes} />}
+      {user && !loading && userVote && <Results votes={votes} db={db} userVote={userVote} allVotes={allVotes} updateVotes={updateVotes} />}
     </div>
   )
 }

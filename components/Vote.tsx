@@ -1,20 +1,25 @@
 import firebase from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export default function Vote({ db, setUserVote }) {
+export default function Vote({ db, setUserVote, allVotes }) {
     /* Firebase auth */
     const [user, loading, error] = useAuthState(firebase.auth());
 
     /* Function creates new vote document */
-    const addVoteDocument = async (uid: string, username: string, vote: string) => {
-        await db.collection("votes").doc(user.uid).set({
-            uid,
-            username,
+    const addVote = async (vote: string) => {
+
+        const userVote = {
+            uid: user.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
             vote,
-        });
+        }
+
+        await db.collection("votes").doc(user.uid).set(userVote);
         setUserVote(vote);
+        allVotes.push(userVote);
     }
-   
+
     return (
         <>
             <h1>Cats or Dogs?</h1>
@@ -22,7 +27,7 @@ export default function Vote({ db, setUserVote }) {
             <div style={{ flexDirection: "row", display: "flex" }}>
                 <button
                     style={{ fontSize: 32, marginRight: 8 }}
-                    onClick={() => addVoteDocument(user.uid, user.displayName, "cats")}
+                    onClick={() => addVote("cats")}
                 >
                     🐱
                 </button>
@@ -31,7 +36,7 @@ export default function Vote({ db, setUserVote }) {
             <div style={{ flexDirection: "row", display: "flex" }}>
                 <button
                     style={{ fontSize: 32, marginRight: 8 }}
-                    onClick={() => addVoteDocument(user.uid, user.displayName, "dogs")}
+                    onClick={() => addVote("dogs")}
                 >
                     🐶
                 </button>
@@ -40,7 +45,7 @@ export default function Vote({ db, setUserVote }) {
             <div style={{ flexDirection: "row", display: "flex" }}>
                 <button
                     style={{ fontSize: 32, marginRight: 8 }}
-                    onClick={() => addVoteDocument(user.uid, user.displayName, "cats and dogs")}
+                    onClick={() => addVote("cats and dogs")}
                 >
                     🐱🐶
                 </button>
