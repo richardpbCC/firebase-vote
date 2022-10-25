@@ -8,9 +8,7 @@ export default function Results({ db, votes, userVote }) {
     /* Function deletes vote document */
     const deleteVoteDocument = async () => {
         await db.collection("votes").doc(user.uid).delete();
-    }   
-    
-    
+    }       
 
     return (
         <>

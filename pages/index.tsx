@@ -1,5 +1,5 @@
 import styles from '../styles/Home.module.css';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import firebase from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -13,15 +13,15 @@ export default function Home() {
 
   const [userVote, setUserVote] = useState<string>();
 
-  /* Function updates the user's vote displayed on the results component */
-  const updateUserVote = async () => {
-    const userData = db.collection("votes").doc(user.uid);
-    const userVote = await userData.get();
-    setUserVote(userVote?.data()?.vote);
-  }
-
   /* Get votes collection from firestore*/
   const db = firebase.firestore();
+
+  /* Function updates the user's vote displayed on the results component */
+  const updateUserVote = async () => {
+    const userData = db?.collection("votes")?.doc(user?.uid);
+    const vote = await userData.get();
+    setUserVote(vote?.data()?.vote);
+  }
 
   /* Get votes collection from firestore*/
   const [votes, votesLoading, votesError] = useCollection(
@@ -29,9 +29,11 @@ export default function Home() {
     {},
   );
 
-  const checkVoteStatus = () => {
-    return votes?.docs?.find((doc) => doc.id === user.uid);
-  }
+  useEffect(() => {
+    if (user) {
+      updateUserVote();
+    }
+  });
 
   return (
     <div
@@ -48,8 +50,8 @@ export default function Home() {
     >
       {loading && <h4>Loading...</h4>}
       {!user && !loading && <SignIn />}
-      {user && !loading && !checkVoteStatus() && <Vote db={db} updateUserVote={updateUserVote} />}
-      {user && !loading && checkVoteStatus() && <Results votes={votes} db={db} userVote={userVote} />}
+      {user && !loading && !userVote && <Vote db={db} setUserVote={setUserVote} />}
+      {user && !loading && userVote && <Results votes={votes} db={db} userVote={userVote} />}
     </div>
   )
 }
