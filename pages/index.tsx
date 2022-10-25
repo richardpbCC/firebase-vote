@@ -16,7 +16,7 @@ export default function Home() {
     displayName: String;
     photoURL: String;
     vote: String;
-  } 
+  }
 
   const [userVote, setUserVote] = useState<string>();
   const [allVotes, setAllVotes] = useState<UserVote[]>();
@@ -46,7 +46,7 @@ export default function Home() {
     if (user) {
       console.log("useEffect")
       updateVotes();
-      console.log("allVotes",allVotes)
+      console.log("allVotes", allVotes)
     }
   }, [votes]);
 
@@ -66,7 +66,14 @@ export default function Home() {
       {loading && <h4>Loading...</h4>}
       {!user && !loading && <SignIn />}
       {user && !loading && !userVote && <Vote db={db} setUserVote={setUserVote} allVotes={allVotes} />}
-      {user && !loading && userVote && <Results votes={votes} db={db} userVote={userVote} allVotes={allVotes} updateVotes={updateVotes} />}
+      {user && !loading && userVote && <Results
+        votes={votes}
+        db={db}
+        userVote={userVote}
+        allVotes={allVotes}
+        updateVotes={updateVotes}
+      />
+      }
     </div>
   )
 }

@@ -86,7 +86,7 @@ export default function Results({ db, votes, userVote, allVotes, updateVotes }) 
                             key={vote.uid}
                         >
                             <img style={{ width: "40px", borderRadius: "50%" }} src={vote.photoURL}/>
-                            {emojis[userVote]}
+                            {emojis[vote.vote]}
                         </div>
                     )
                 })}

@@ -6,8 +6,10 @@ import firebase from "../firebase/config";
 const uiConfig = {
     signInSuccessUrl: "/", /* If sign in is successful redirect to "/" */
     signInOptions: [
-        firebase.auth.GithubAuthProvider.PROVIDER_ID,
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+        firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+        firebase.auth.GithubAuthProvider.PROVIDER_ID
     ], /* Display all sign in options */
 }
 
