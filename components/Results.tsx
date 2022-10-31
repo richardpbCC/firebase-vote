@@ -1,7 +1,7 @@
 import firebase from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export default function Results({ db, votes, userVote, allVotes, updateVotes }) {
+export default function Results({ db, userVote, savedVotes, updateVotes }) {
     /* Firebase auth */
     const [user, loading, error] = useAuthState(firebase.auth());
 
@@ -29,7 +29,7 @@ export default function Results({ db, votes, userVote, allVotes, updateVotes }) 
                 </div>
                 <h3>
                     Cat People:{" "}
-                    {votes?.docs?.filter((doc) => doc.data().vote === "cats").length}
+                    {savedVotes?.filter((vote) => vote.vote === "cats").length}
                 </h3>
             </div>
 
@@ -41,7 +41,7 @@ export default function Results({ db, votes, userVote, allVotes, updateVotes }) 
                 </div>
                 <h3>
                     Dog People:{" "}
-                    {votes?.docs?.filter((doc) => doc.data().vote === "dogs").length}
+                    {savedVotes?.filter((vote) => vote.vote === "dogs").length}
                 </h3>
             </div>
 
@@ -53,7 +53,7 @@ export default function Results({ db, votes, userVote, allVotes, updateVotes }) 
                 </div>
                 <h3>
                     Love Both:{" "}
-                    {votes?.docs?.filter((doc) => doc.data().vote === "cats and dogs").length}
+                    {savedVotes?.filter((vote) => vote.vote === "cats and dogs").length}
                 </h3>
             </div>
 
@@ -61,7 +61,7 @@ export default function Results({ db, votes, userVote, allVotes, updateVotes }) 
                 <div
                     style={{ fontSize: 32, marginRight: 8 }}
                 >
-                    You voted: {userVote} {emojis[userVote]}
+                    You voted: {userVote?.vote} {emojis[userVote?.vote]}
                 </div>
 
             </div>
@@ -78,8 +78,7 @@ export default function Results({ db, votes, userVote, allVotes, updateVotes }) 
             <h2>Other votes:</h2>
 
             <div style={{ flexDirection: "column", display: "flex"}}>
-                {allVotes?.map((vote) => {
-                    console.log("vote", vote)
+                {savedVotes?.map((vote) => {                    
                     return (
                         <div
                             style={{ flexDirection: "row", display: "flex", alignItems: "center", fontSize: 32, marginRight: 8 }}

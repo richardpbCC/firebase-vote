@@ -1,7 +1,7 @@
 import firebase from "../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export default function Vote({ db, setUserVote, allVotes }) {
+export default function Vote({ db, savedVotes, setSavedVotes }) {
     /* Firebase auth */
     const [user, loading, error] = useAuthState(firebase.auth());
 
@@ -16,8 +16,6 @@ export default function Vote({ db, setUserVote, allVotes }) {
         }
 
         await db.collection("votes").doc(user.uid).set(userVote);
-        setUserVote(vote);
-        allVotes.push(userVote);
     }
 
     return (
